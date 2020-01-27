@@ -2,17 +2,20 @@ package main
 
 import (
 	"errors"
+	"fmt"
 )
 
-type StringService interface {
+const EmptyParameterError  =  "The parameter %s can't be empty!"
+
+type Service interface {
 	Count(string) (int, error)
 }
 
-type stringService struct{}
+type service struct{}
 
-func (stringService) Count(s string) (int, error) {
+func (service) Count(s string) (int, error) {
 	if s == "" {
-		return 0, errors.New("The string can't be empty!")
+		return 0, errors.New(fmt.Sprintf(EmptyParameterError, "s"))
 	}
 	return len(s), nil
 }

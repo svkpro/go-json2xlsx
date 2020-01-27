@@ -1,31 +1,48 @@
 package main
 
+// The profiles is just over HTTP, so we just have a single transport.go.
+
 import (
 	"context"
 	"encoding/json"
+	"github.com/go-kit/kit/transport"
+	"github.com/gorilla/mux"
 	"net/http"
 
-	"github.com/go-kit/kit/endpoint"
+	"github.com/go-kit/kit/log"
+	httptransport "github.com/go-kit/kit/transport/http"
 )
 
-func makeCountEndpoint(svc StringService) endpoint.Endpoint {
-	return func(_ context.Context, request interface{}) (interface{}, error) {
-		req := request.(countRequest)
-		amount, err := svc.Count(req.S)
-
-		return countResponse{amount}, err
+func MakeHTTPHandler(s Service, logger log.Logger) http.Handler {
+	router := mux.NewRouter()
+	endpoints := MakeEndpoints(s)
+	options := []httptransport.ServerOption{
+		httptransport.ServerErrorHandler(transport.NewLogErrorHandler(logger)),
+		httptransport.ServerErrorEncoder(encodeError),
 	}
+
+
+	router.Methods("POST").Path("/count").Handler(httptransport.NewServer(
+		endpoints.PostCountEndpoint,
+		decodePostCountRequest,
+		postEncodeResponse,
+		options...,
+	))
+
+	return router
 }
 
-func decodeCountRequest(_ context.Context, r *http.Request) (interface{}, error) {
+
+func decodePostCountRequest(_ context.Context, r *http.Request) (interface{}, error) {
 	var request countRequest
 	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
 		return nil, err
 	}
+
 	return request, nil
 }
 
-func encodeResponse(ctx context.Context, w http.ResponseWriter, response interface{}) error {
+func postEncodeResponse(ctx context.Context, w http.ResponseWriter, response interface{}) error {
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 
 	return json.NewEncoder(w).Encode(response)

@@ -8,7 +8,7 @@ import (
 
 type loggingMiddleware struct {
 	logger log.Logger
-	next   StringService
+	next   Service
 }
 
 func (mw loggingMiddleware) Count(s string) (n int, err error) {
@@ -23,5 +23,6 @@ func (mw loggingMiddleware) Count(s string) (n int, err error) {
 	}(time.Now())
 
 	n, err = mw.next.Count(s)
+
 	return
 }
