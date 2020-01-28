@@ -9,7 +9,6 @@ import (
 
 func main() {
 	logger := log.NewLogfmtLogger(os.Stderr)
-
 	var s Service
 	s = service{}
 	s = loggingMiddleware{logger, s}
