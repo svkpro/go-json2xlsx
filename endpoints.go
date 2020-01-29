@@ -7,21 +7,21 @@ import (
 )
 
 type Endpoints struct {
-	PostCountEndpoint   endpoint.Endpoint
+	PostMakeXlsxEndpoint   endpoint.Endpoint
 }
 
 func MakeEndpoints(s Service) Endpoints {
 	return Endpoints{
-		PostCountEndpoint:   MakePostCountEndpoint(s),
+		PostMakeXlsxEndpoint:   MakePostMakeXlsxEndpoint(s),
 	}
 }
 
-func MakePostCountEndpoint(s Service) endpoint.Endpoint {
+func MakePostMakeXlsxEndpoint(s Service) endpoint.Endpoint {
 	return func(_ context.Context, request interface{}) (interface{}, error) {
-		req := request.(countRequest)
-		amount, err := s.Count(req.S)
+		req := request.(xlsxRequest)
+		fp, err:= s.MakeXlsx(req.Data)
 
-		return countResponse{amount}, err
+		return xlsxResponse{fp}, err
 	}
 }
 

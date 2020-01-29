@@ -22,9 +22,9 @@ func MakeHTTPHandler(s Service, logger log.Logger) http.Handler {
 		httptransport.ServerErrorEncoder(encodeError),
 	}
 
-	router.Methods("POST").Path("/count").Handler(httptransport.NewServer(
-		endpoints.PostCountEndpoint,
-		decodePostCountRequest,
+	router.Methods("POST").Path("/make-xlsx").Handler(httptransport.NewServer(
+		endpoints.PostMakeXlsxEndpoint,
+		decodePostMakeXlsxRequest,
 		postEncodeResponse,
 		options...,
 	))
@@ -32,9 +32,9 @@ func MakeHTTPHandler(s Service, logger log.Logger) http.Handler {
 	return router
 }
 
-func decodePostCountRequest(_ context.Context, r *http.Request) (interface{}, error) {
+func decodePostMakeXlsxRequest(_ context.Context, r *http.Request) (interface{}, error) {
 	validate = validator.New()
-	var request countRequest
+	var request xlsxRequest
 
 	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
 		return nil, err
@@ -49,6 +49,7 @@ func decodePostCountRequest(_ context.Context, r *http.Request) (interface{}, er
 
 func postEncodeResponse(ctx context.Context, w http.ResponseWriter, response interface{}) error {
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
+	w.WriteHeader(http.StatusCreated)
 
 	return json.NewEncoder(w).Encode(response)
 }
@@ -61,10 +62,10 @@ func encodeError(_ context.Context, err error, w http.ResponseWriter) {
 	})
 }
 
-type countRequest struct {
-	S string `json:"s" validate:"required,min=1,max=10"`
+type xlsxRequest struct {
+	Data string `json:"s" validate:"required,min=1,max=10"`
 }
 
-type countResponse struct {
-	Amount int `json:"amount"`
+type xlsxResponse struct {
+	Data string `json:"data"`
 }
