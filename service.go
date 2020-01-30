@@ -40,7 +40,7 @@ func (sr *service) MakeXlsx(s string)(string, error) {
 	xf.Cell.Value = s
 
 	fileName := time.Now().Format(DateTimeLayout) + ".xlsx"
-	xf.Err = xf.File.Save(RepositoryPath + fileName)
+	xf.Err = xf.File.Save(fmt.Sprintf(RepositoryPath, fileName))
 	if xf.Err != nil {
 		fmt.Printf(xf.Err.Error())
 	}
