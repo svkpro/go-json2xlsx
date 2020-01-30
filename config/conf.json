@@ -1,0 +1,10 @@
+{
+  "ENVIRONMENT": "dev",
+  "LOGGING_LEVEL": "info",
+  "HTTP_PORT": ":19001",
+  "AWS_URL": "https://s3.amazonaws.com",
+  "AWS_ACCESS_KEY": "AWS_ACCESS_KEY",
+  "AWS_SECRET_KEY": "AWS_SECRET_KEY",
+  "AWS_BUCKET_NAME": "upload-xlsx",
+  "AWS_REGION": "us-east-1"
+}

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"json2xls/config"
 	"net/http"
 	"os"
 
@@ -24,11 +25,13 @@ func main() {
 	}
 	fmt.Println("Successfully created mybucket.")*/
 
+	settings := config.New()
+
 	logger := log.NewLogfmtLogger(os.Stderr)
-	s := NewService()
-	s = loggingMiddleware{logger, s}
+	service := NewService()
+	service = loggingMiddleware{logger, service}
 
-	handler := MakeHTTPHandler(s, logger)
+	handler := MakeHTTPHandler(service, logger)
 
-	logger.Log("err", http.ListenAndServe(":19001", handler))
+	logger.Log("err", http.ListenAndServe(settings.HttpPort, handler))
 }
