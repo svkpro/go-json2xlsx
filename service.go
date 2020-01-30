@@ -7,7 +7,7 @@ import (
 )
 
 const (
-	RepositoryPath = "repository/%s"
+	RepositoryPath = "data/%s"
 	DateTimeLayout = "2006-01-02 15:04:05"
 )
 
