@@ -7,11 +7,12 @@ import (
 )
 
 const (
-	RepositoryPath = "repository/"
+	RepositoryPath = "repository/%s"
 	DateTimeLayout = "2006-01-02 15:04:05"
 )
 
 type Service interface {
+	GetXlsx(string) (string, error)
 	MakeXlsx(string) (string, error)
 }
 
@@ -19,6 +20,12 @@ type service struct{}
 
 func NewService() Service {
 	return &service {}
+}
+
+func (sr *service) GetXlsx(f string)(string, error) {
+	path := fmt.Sprintf(RepositoryPath, f)
+
+	return path, nil
 }
 
 func (sr *service) MakeXlsx(s string)(string, error) {

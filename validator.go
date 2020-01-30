@@ -15,4 +15,3 @@ func ValidateStruct(st interface{}) error {
 
 	return nil
 }
-
