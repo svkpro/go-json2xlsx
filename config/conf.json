@@ -2,9 +2,10 @@
   "ENVIRONMENT": "dev",
   "LOGGING_LEVEL": "info",
   "HTTP_PORT": ":19001",
-  "AWS_URL": "https://s3.amazonaws.com",
-  "AWS_ACCESS_KEY": "AWS_ACCESS_KEY",
-  "AWS_SECRET_KEY": "AWS_SECRET_KEY",
+  "AWS_URL": "http://0.0.0.0:19002",
+  "AWS_ACCESS_KEY": "MinioAccessKey",
+  "AWS_SECRET_KEY": "MinioSecretKey",
   "AWS_BUCKET_NAME": "upload-xlsx",
-  "AWS_REGION": "us-east-1"
+  "AWS_REGION": "us-east-1",
+  "AWS_DISABLE_SSL": true
 }

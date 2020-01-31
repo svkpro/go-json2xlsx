@@ -13,7 +13,8 @@ import (
 )
 
 const (
-	FileUploadError = "AWS s3 file upload error"
+	NotFoundError     = "%s Not Found!"
+	FileUploadError   = "AWS s3 file upload error"
 	PresignedUrlError = "AWS s3 presigned url request error"
 )
 
@@ -22,7 +23,8 @@ type S3FileUploader struct {
 	BucketName string
 	Region     string
 	AccessKey  string
-	PrivateKey string
+	SecretKey  string
+	DisableSSL bool
 }
 
 func (s3u S3FileUploader) Upload(data io.Reader, key string) (uri string, err error) {
@@ -72,10 +74,14 @@ func (s3u S3FileUploader) Ping() error {
 	if err != nil {
 		return err
 	}
+
 	s3Client := s3.New(sess)
 	_, err = s3Client.HeadBucket(&s3.HeadBucketInput{Bucket: &s3u.BucketName})
+	if err != nil {
+		return errors.New(fmt.Sprintf(NotFoundError, "Bucket"))
+	}
 
-	return errors.New(FileUploadError)
+	return nil
 }
 
 func (s3u S3FileUploader) openSession() (*session.Session, error) {
@@ -83,10 +89,11 @@ func (s3u S3FileUploader) openSession() (*session.Session, error) {
 		Region:           aws.String(s3u.Region),
 		Endpoint:         aws.String(s3u.URL),
 		S3ForcePathStyle: aws.Bool(true),
+		DisableSSL:       aws.Bool(s3u.DisableSSL),
 	}
 
-	if s3u.AccessKey != "" && s3u.PrivateKey != "" {
-		crds := credentials.Value{AccessKeyID: s3u.AccessKey, SecretAccessKey: s3u.PrivateKey}
+	if s3u.AccessKey != "" && s3u.SecretKey != "" {
+		crds := credentials.Value{AccessKeyID: s3u.AccessKey, SecretAccessKey: s3u.SecretKey}
 		creds := credentials.NewStaticCredentialsFromCreds(crds)
 		_, err := creds.Get()
 		if err != nil {

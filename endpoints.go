@@ -8,14 +8,14 @@ import (
 )
 
 type Endpoints struct {
-	GetXlsxEndpoint   endpoint.Endpoint
-	PostMakeXlsxEndpoint   endpoint.Endpoint
+	GetXlsxEndpoint      endpoint.Endpoint
+	PostMakeXlsxEndpoint endpoint.Endpoint
 }
 
 func MakeEndpoints(s Service) Endpoints {
 	return Endpoints{
-		GetXlsxEndpoint:   MakeGetXlsxEndpoint(s),
-		PostMakeXlsxEndpoint:   MakePostMakeXlsxEndpoint(s),
+		GetXlsxEndpoint:      MakeGetXlsxEndpoint(s),
+		PostMakeXlsxEndpoint: MakePostMakeXlsxEndpoint(s),
 	}
 }
 
@@ -38,12 +38,8 @@ func MakePostMakeXlsxEndpoint(sr Service) endpoint.Endpoint {
 		if !ok {
 			panic(http.StatusText(http.StatusBadRequest))
 		}
-		fp, err:= sr.MakeXlsx(r.Data)
+		fp, err := sr.MakeXlsx(r.Data)
 
 		return xlsxResponse{fp}, err
 	}
 }
-
-
-
-
