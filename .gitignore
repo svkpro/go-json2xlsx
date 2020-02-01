@@ -1,3 +1,3 @@
 .idea/*
-.minio.sys/*
-data/*
+data/minio/*
+data/upload-xlsx/*
