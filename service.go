@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"github.com/tealeg/xlsx"
 	"json2xls/application/aws"
-	"json2xls/config"
 	"os"
 	"time"
 )
@@ -33,15 +32,7 @@ func (sr *service) GetXlsx(f string) (string, error) {
 }
 
 func (sr *service) MakeXlsx(s string) (string, error) {
-	c := config.New()
-	s3 := aws.S3FileUploader{
-		URL:        c.AwsURL,
-		BucketName: c.AwsBucketName,
-		Region:     c.AwsRegion,
-		AccessKey:  c.AwsAccessKey,
-		SecretKey:  c.AwsSecretKey,
-		DisableSSL: c.AwsDisableSSL,
-	}
+	s3 := aws.New()
 	err := s3.Ping()
 	if s3.Ping() != nil {
 		return "", err

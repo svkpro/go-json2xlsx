@@ -9,6 +9,7 @@ import (
 	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/aws/aws-sdk-go/service/s3/s3manager"
 	"io"
+	"json2xls/config"
 	"time"
 )
 
@@ -25,6 +26,19 @@ type S3FileUploader struct {
 	AccessKey  string
 	SecretKey  string
 	DisableSSL bool
+}
+
+func New() S3FileUploader {
+	c := config.New()
+
+	return S3FileUploader{
+		URL:        c.AwsURL,
+		BucketName: c.AwsBucketName,
+		Region:     c.AwsRegion,
+		AccessKey:  c.AwsAccessKey,
+		SecretKey:  c.AwsSecretKey,
+		DisableSSL: c.AwsDisableSSL,
+	}
 }
 
 func (s3u S3FileUploader) Upload(data io.Reader, key string) (uri string, err error) {
