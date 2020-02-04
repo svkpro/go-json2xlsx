@@ -16,7 +16,7 @@ const (
 
 type Service interface {
 	GetXlsx(string) (string, error)
-	MakeXlsx(string) (string, error)
+	MakeXlsx(data XlsxPayloadData) (string, error)
 }
 
 type service struct{}
@@ -31,7 +31,7 @@ func (sr *service) GetXlsx(f string) (string, error) {
 	return path, nil
 }
 
-func (sr *service) MakeXlsx(s string) (string, error) {
+func (sr *service) MakeXlsx(data XlsxPayloadData) (string, error) {
 	s3 := aws.New()
 	err := s3.Ping()
 	if s3.Ping() != nil {
@@ -39,13 +39,13 @@ func (sr *service) MakeXlsx(s string) (string, error) {
 	}
 	xf := XlsxFile{}
 	xf.File = xlsx.NewFile()
-	xf.Sheet, xf.Err = xf.File.AddSheet("Sheet1")
+	xf.Sheet, xf.Err = xf.File.AddSheet(data.Sheet)
 	if xf.Err != nil {
 		return "", err
 	}
 	xf.Row = xf.Sheet.AddRow()
 	xf.Cell = xf.Row.AddCell()
-	xf.Cell.Value = s
+	xf.Cell.Value = data.Value
 	fileName := fmt.Sprintf(FileNameLayout, time.Now().Format(DateTimeLayout))
 	path := fmt.Sprintf(RepositoryPath, fileName)
 	xf.Err = xf.File.Save(path)

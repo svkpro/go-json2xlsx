@@ -12,7 +12,7 @@ require (
 	github.com/gorilla/mux v1.7.3
 	github.com/leodido/go-urn v1.2.0 // indirect
 	github.com/tealeg/xlsx v1.0.5
-	golang.org/x/net v0.0.0-20190522155817-f3200d17e092 // indirect
+	golang.org/x/net v0.0.0-20190522155817-f3200d17e092
 	gopkg.in/go-playground/assert.v1 v1.2.1 // indirect
 	gopkg.in/go-playground/validator.v9 v9.31.0
 )

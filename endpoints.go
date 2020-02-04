@@ -34,7 +34,7 @@ func MakeGetXlsxEndpoint(sr Service) endpoint.Endpoint {
 
 func MakePostMakeXlsxEndpoint(sr Service) endpoint.Endpoint {
 	return func(_ context.Context, request interface{}) (interface{}, error) {
-		r, ok := request.(xlsxRequest)
+		r, ok := request.(XlsxRequest)
 		if !ok {
 			panic(http.StatusText(http.StatusBadRequest))
 		}

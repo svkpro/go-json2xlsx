@@ -15,12 +15,17 @@ import (
 	"os"
 )
 
-type xlsxRequest struct {
-	Data string `json:"s" validate:"required,min=1,max=10"`
-}
-
 type xlsxResponse struct {
 	Data string `json:"data"`
+}
+
+type XlsxRequest struct {
+	Data XlsxPayloadData `json:"data"`
+}
+
+type XlsxPayloadData struct{
+	Sheet string `json:"Sheet"`
+	Value string `json:"Value"`
 }
 
 func MakeHTTPHandler(s Service, logger log.Logger) http.Handler {
@@ -74,9 +79,16 @@ func getEncodeResponse(ctx context.Context, w http.ResponseWriter, response inte
 	return nil
 }
 
+func postEncodeResponse(ctx context.Context, w http.ResponseWriter, response interface{}) error {
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
+	w.WriteHeader(http.StatusCreated)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
 func decodePostMakeXlsxRequest(_ context.Context, r *http.Request) (interface{}, error) {
 	validate = validator.New()
-	var request xlsxRequest
+	var request XlsxRequest
 
 	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
 		return nil, err
@@ -87,13 +99,6 @@ func decodePostMakeXlsxRequest(_ context.Context, r *http.Request) (interface{},
 	}
 
 	return request, nil
-}
-
-func postEncodeResponse(ctx context.Context, w http.ResponseWriter, response interface{}) error {
-	w.Header().Set("Content-Type", "application/json; charset=utf-8")
-	w.WriteHeader(http.StatusCreated)
-
-	return json.NewEncoder(w).Encode(response)
 }
 
 func encodeError(_ context.Context, err error, w http.ResponseWriter) {
