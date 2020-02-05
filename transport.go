@@ -1,7 +1,5 @@
 package main
 
-// The profiles is just over HTTP, so we just have a single transport.go.
-
 import (
 	"bufio"
 	"context"
@@ -23,9 +21,10 @@ type XlsxRequest struct {
 	Data XlsxPayloadData `json:"data"`
 }
 
-type XlsxPayloadData struct{
-	Sheet string `json:"Sheet"`
-	Value string `json:"Value"`
+type XlsxPayloadData struct {
+	Sheet   string     `json:"Sheet"`
+	Headers []string   `json:"Headers"`
+	Rows    [][]string `json:"Rows"`
 }
 
 func MakeHTTPHandler(s Service, logger log.Logger) http.Handler {
