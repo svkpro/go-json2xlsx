@@ -51,11 +51,9 @@ func (sr *service) MakeXlsx(data XlsxPayloadData) (string, error) {
 
 	for _, row := range data.Rows {
 		xf.Row = xf.Sheet.AddRow()
-		for _, value := range row {
-			xf.Cell = xf.Row.AddCell()
-			xf.Cell.Value = string(value)
-		}
+		xf.Row.Cells = row.Cells
 	}
+
 	fileName := fmt.Sprintf(FileNameLayout, time.Now().Format(DateTimeLayout))
 	path := fmt.Sprintf(RepositoryPath, fileName)
 	xf.Err = xf.File.Save(path)

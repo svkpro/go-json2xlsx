@@ -8,6 +8,7 @@ import (
 	"github.com/go-kit/kit/transport"
 	httptransport "github.com/go-kit/kit/transport/http"
 	"github.com/gorilla/mux"
+	"github.com/tealeg/xlsx"
 	"gopkg.in/go-playground/validator.v9"
 	"net/http"
 	"os"
@@ -22,9 +23,9 @@ type XlsxRequest struct {
 }
 
 type XlsxPayloadData struct {
-	Sheet   string     `json:"Sheet"`
-	Headers []string   `json:"Headers"`
-	Rows    [][]string `json:"Rows"`
+	Sheet   string      `json:"sheet"`
+	Headers []string    `json:"headers"`
+	Rows    []*xlsx.Row `json:"rows"`
 }
 
 func MakeHTTPHandler(s Service, logger log.Logger) http.Handler {
