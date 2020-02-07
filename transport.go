@@ -52,6 +52,13 @@ func MakeHTTPHandler(s Service, logger log.Logger) http.Handler {
 		options...,
 	))
 
+	router.Methods("DELETE").Path("/xlsx/{file}").Handler(httptransport.NewServer(
+		endpoints.DeleteXlsxEndpoint,
+		decodeDeleteXlsxRequest,
+		deleteEncodeResponse,
+		options...,
+	))
+
 	return router
 }
 
@@ -88,6 +95,19 @@ func decodePostMakeXlsxRequest(_ context.Context, r *http.Request) (interface{},
 	}
 
 	return request, nil
+}
+
+func decodeDeleteXlsxRequest(_ context.Context, r *http.Request) (interface{}, error) {
+	q := mux.Vars(r)
+
+	return q, nil
+}
+
+func deleteEncodeResponse(ctx context.Context, w http.ResponseWriter, response interface{}) error {
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
+	w.WriteHeader(http.StatusNoContent)
+
+	return nil
 }
 
 func encodeError(_ context.Context, err error, w http.ResponseWriter) {

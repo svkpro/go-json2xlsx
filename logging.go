@@ -16,3 +16,7 @@ func (mw loggingMiddleware) GetXlsx(s string) (path string, err error) {
 func (mw loggingMiddleware) MakeXlsx(data XlsxRequestData) (path string, err error) {
 	return mw.next.MakeXlsx(data)
 }
+
+func (mw loggingMiddleware) DeleteXlsx(s string) (err error) {
+	return mw.next.DeleteXlsx(s)
+}

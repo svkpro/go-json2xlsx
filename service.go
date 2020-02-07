@@ -18,6 +18,7 @@ const (
 type Service interface {
 	GetXlsx(string) (string, error)
 	MakeXlsx(data XlsxRequestData) (string, error)
+	DeleteXlsx(string) error
 }
 
 type service struct{}
@@ -79,4 +80,14 @@ func (sr *service) MakeXlsx(data XlsxRequestData) (string, error) {
 	}
 
 	return s3l, xf.Err
+}
+
+func (sr *service) DeleteXlsx(f string) error {
+	s3 := aws.New()
+	err := s3.Ping()
+	if s3.Ping() != nil {
+		return err
+	}
+
+	return s3.Delete(f)
 }

@@ -10,12 +10,14 @@ import (
 type Endpoints struct {
 	GetXlsxEndpoint      endpoint.Endpoint
 	PostMakeXlsxEndpoint endpoint.Endpoint
+	DeleteXlsxEndpoint   endpoint.Endpoint
 }
 
 func MakeEndpoints(s Service) Endpoints {
 	return Endpoints{
 		GetXlsxEndpoint:      MakeGetXlsxEndpoint(s),
 		PostMakeXlsxEndpoint: MakePostMakeXlsxEndpoint(s),
+		DeleteXlsxEndpoint:   MakeDeleteXlsxEndpoint(s),
 	}
 }
 
@@ -41,5 +43,17 @@ func MakePostMakeXlsxEndpoint(sr Service) endpoint.Endpoint {
 		fp, err := sr.MakeXlsx(r.Data)
 
 		return xlsxResponse{XlsxResponseData{fp}}, err
+	}
+}
+
+func MakeDeleteXlsxEndpoint(sr Service) endpoint.Endpoint {
+	return func(_ context.Context, request interface{}) (interface{}, error) {
+		r, ok := request.(map[string]string)
+		if !ok {
+			panic(http.StatusText(http.StatusBadRequest))
+		}
+		err := sr.DeleteXlsx(r["file"])
+
+		return xlsxResponse{XlsxResponseData{""}}, err
 	}
 }
