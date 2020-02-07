@@ -43,11 +43,9 @@ func (sr *service) MakeXlsx(data XlsxPayloadData) (string, error) {
 	if xf.Err != nil {
 		return "", err
 	}
+
 	xf.Row = xf.Sheet.AddRow()
-	for _, value := range data.Headers {
-		xf.Cell = xf.Row.AddCell()
-		xf.Cell.Value = value
-	}
+	xf.Row.WriteSlice(&data.Headers, -1)
 
 	for _, row := range data.Rows {
 		xf.Row = xf.Sheet.AddRow()

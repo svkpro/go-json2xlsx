@@ -1,0 +1,21 @@
+{
+  "data": {
+    "sheet": "SheetName",
+    "headers": [
+      "Header1",
+      "Header2"
+    ],
+    "rows": [
+      {
+        "Cells": [
+          {
+            "Value": "Value"
+          },
+          {
+            "Value": "Value"
+          }
+        ]
+      }
+    ]
+  }
+}
