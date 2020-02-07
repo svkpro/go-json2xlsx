@@ -1,7 +1,6 @@
 package main
 
 import (
-	"bufio"
 	"context"
 	"encoding/json"
 	"github.com/go-kit/kit/log"
@@ -11,7 +10,6 @@ import (
 	"github.com/tealeg/xlsx"
 	"gopkg.in/go-playground/validator.v9"
 	"net/http"
-	"os"
 )
 
 type xlsxResponse struct {
@@ -64,23 +62,10 @@ func decodeGetXlsxRequest(_ context.Context, r *http.Request) (interface{}, erro
 }
 
 func getEncodeResponse(ctx context.Context, w http.ResponseWriter, response interface{}) error {
-	path, ok := response.(string)
-	if !ok {
-		panic("Bad response generation!")
-	}
-	f, err := os.Open(path)
-	if err == nil {
-		w.WriteHeader(http.StatusOK)
-		bufferedReader := bufio.NewReader(f)
-		w.Header().Set("Content-Type", "application/vnd.ms-excel")
-		w.Header().Add("Content-Transfer-Encoding", "binary")
-		bufferedReader.WriteTo(w)
-	} else {
-		w.WriteHeader(http.StatusNotFound)
-		w.Write([]byte(http.StatusText(http.StatusNotFound)))
-	}
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
+	w.WriteHeader(http.StatusOK)
 
-	return nil
+	return json.NewEncoder(w).Encode(response)
 }
 
 func postEncodeResponse(ctx context.Context, w http.ResponseWriter, response interface{}) error {

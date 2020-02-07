@@ -26,9 +26,9 @@ func MakeGetXlsxEndpoint(sr Service) endpoint.Endpoint {
 			panic(http.StatusText(http.StatusBadRequest))
 		}
 		file := r["file"]
-		path, err := sr.GetXlsx(file)
+		fp, err := sr.GetXlsx(file)
 
-		return path, err
+		return xlsxResponse{XlsxResponseData{fp}}, err
 	}
 }
 

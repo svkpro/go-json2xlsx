@@ -12,6 +12,7 @@ const (
 	RepositoryPath = "data/%s"
 	FileNameLayout = "%s.xlsx"
 	DateTimeLayout = "2006-01-02_15:04:05"
+	signedTTL      = 60
 )
 
 type Service interface {
@@ -26,9 +27,15 @@ func NewService() Service {
 }
 
 func (sr *service) GetXlsx(f string) (string, error) {
-	path := fmt.Sprintf(RepositoryPath, f)
+	s3 := aws.New()
+	err := s3.Ping()
+	if s3.Ping() != nil {
+		return "", err
+	}
 
-	return path, nil
+	s3l, err := s3.SignedRetrievalURL(f, f, signedTTL)
+
+	return s3l, nil
 }
 
 func (sr *service) MakeXlsx(data XlsxRequestData) (string, error) {
@@ -66,7 +73,7 @@ func (sr *service) MakeXlsx(data XlsxRequestData) (string, error) {
 		return "", err
 	}
 
-	s3l, err := s3.Upload(fr, fileName, 60)
+	s3l, err := s3.Upload(fr, fileName, signedTTL)
 	if xf.Err != nil {
 		return "", err
 	}
