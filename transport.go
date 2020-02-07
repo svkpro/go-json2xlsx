@@ -15,14 +15,18 @@ import (
 )
 
 type xlsxResponse struct {
-	Data string `json:"data"`
+	Data XlsxResponseData `json:"data"`
+}
+
+type XlsxResponseData struct {
+	File string `json:"file"`
 }
 
 type XlsxRequest struct {
-	Data XlsxPayloadData `json:"data"`
+	Data XlsxRequestData `json:"data"`
 }
 
-type XlsxPayloadData struct {
+type XlsxRequestData struct {
 	Sheet   string      `json:"sheet"`
 	Headers []string    `json:"headers"`
 	Rows    []*xlsx.Row `json:"rows"`

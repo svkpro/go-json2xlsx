@@ -41,7 +41,7 @@ func New() S3FileUploader {
 	}
 }
 
-func (s3u S3FileUploader) Upload(data io.Reader, key string) (uri string, err error) {
+func (s3u S3FileUploader) Upload(data io.Reader, key string, signedTTL int64) (uri string, err error) {
 	sess, err := s3u.openSession()
 	if err != nil {
 		return "", err
@@ -59,7 +59,13 @@ func (s3u S3FileUploader) Upload(data io.Reader, key string) (uri string, err er
 		return "", errors.New(FileUploadError)
 	}
 
-	return s3u.URL + "/" + s3u.BucketName + "/" + key, nil
+	uri, err = s3u.SignedRetrievalURL(key, key, signedTTL)
+
+	if err != nil {
+		return "", errors.New(FileUploadError)
+	}
+
+	return uri, err
 
 }
 

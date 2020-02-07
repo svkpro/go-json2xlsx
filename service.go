@@ -16,7 +16,7 @@ const (
 
 type Service interface {
 	GetXlsx(string) (string, error)
-	MakeXlsx(data XlsxPayloadData) (string, error)
+	MakeXlsx(data XlsxRequestData) (string, error)
 }
 
 type service struct{}
@@ -31,7 +31,7 @@ func (sr *service) GetXlsx(f string) (string, error) {
 	return path, nil
 }
 
-func (sr *service) MakeXlsx(data XlsxPayloadData) (string, error) {
+func (sr *service) MakeXlsx(data XlsxRequestData) (string, error) {
 	s3 := aws.New()
 	err := s3.Ping()
 	if s3.Ping() != nil {
@@ -66,7 +66,7 @@ func (sr *service) MakeXlsx(data XlsxPayloadData) (string, error) {
 		return "", err
 	}
 
-	s3l, err := s3.Upload(fr, fileName)
+	s3l, err := s3.Upload(fr, fileName, 60)
 	if xf.Err != nil {
 		return "", err
 	}

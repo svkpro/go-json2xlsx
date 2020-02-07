@@ -40,6 +40,6 @@ func MakePostMakeXlsxEndpoint(sr Service) endpoint.Endpoint {
 		}
 		fp, err := sr.MakeXlsx(r.Data)
 
-		return xlsxResponse{fp}, err
+		return xlsxResponse{XlsxResponseData{fp}}, err
 	}
 }
